@@ -1,0 +1,286 @@
+
+var pitchClasses = [];
+	
+	pitchClasses.push(cNotes = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120]);
+	pitchClasses.push(cSharpNotes = [1, 13, 25, 37, 49, 61, 73, 85, 97, 109, 121]);
+
+	pitchClasses.push(dNotes = [2, 14, 26, 38, 50, 62, 74, 86, 98, 110, 122]);
+	pitchClasses.push(dSharpNotes = [3, 15, 27, 39, 51, 63, 75, 87, 99, 111, 123]);
+
+	pitchClasses.push(eNotes = [4, 16, 28, 40, 52, 64, 76, 88, 100, 112, 124]);
+
+	pitchClasses.push(fNotes = [5, 17, 29, 41, 53, 65, 77, 89, 101, 113, 125]);
+	pitchClasses.push(fSharpNotes = [6, 18, 30, 42, 54, 66, 78, 90, 102, 114, 126]);
+
+	pitchClasses.push(gNotes = [7, 19, 31, 43, 55, 67, 79, 91, 103, 115]);
+	pitchClasses.push(gSharpNotes = [8, 20, 32, 44, 56, 68, 80, 92, 104, 116]);
+
+	pitchClasses.push(aNotes = [9, 21, 33, 45, 57, 69, 81, 93, 105, 117]);
+	pitchClasses.push(aSharpNotes = [10, 22, 34, 46, 58, 70, 82, 94, 106, 118]);
+
+	pitchClasses.push(bNotes = [11, 21, 35, 47, 59, 71, 83, 95, 107, 119]);
+
+
+var usedPitchClasses = [];
+
+var keyOfC = [cNotes, dNotes, eNotes, fNotes, gNotes, aNotes, bNotes];
+var keyOfCSharp = [cSharpNotes, dSharpNotes, fNotes, fSharpNotes, gSharpNotes, aSharpNotes, cNotes];
+var keyOfD = [dNotes, eNotes, fSharpNotes];
+
+var PluginParameters = [];
+
+PluginParameters.push({
+	type: "menu",
+	name: "Note One",
+	defaultValue: 1,
+	valueStrings: ["none", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+});
+
+PluginParameters.push({
+	type: "menu",
+	name: "Note Two",
+	defaultValue: 3,
+	valueStrings: ["none", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+});
+
+PluginParameters.push({
+	type: "menu",
+	name: "Note Three",
+	defaultValue: 5,
+	valueStrings: ["none", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+});
+
+PluginParameters.push({
+	type: "menu",
+	name: "Note Four",
+	defaultValue: 6,
+	valueStrings: ["none", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+});
+
+PluginParameters.push({
+	type: "menu",
+	name: "Note Five",
+	defaultValue: 8,
+	valueStrings: ["none", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+});
+
+PluginParameters.push({
+	type: "menu",
+	name: "Note Six",
+	defaultValue: 10,
+	valueStrings: ["none", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+});
+
+PluginParameters.push({
+	type: "menu",
+	name: "Note Seven",
+	defaultValue: 12,
+	valueStrings: ["none", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+});
+
+PluginParameters.push({
+	type: "menu",
+	name: "Note Eight",
+	defaultValue: 1,
+	valueStrings: ["none", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+});
+
+PluginParameters.push({
+	type: "menu",
+	name: "Note Nine",
+	defaultValue: 1,
+	valueStrings: ["none", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+});
+
+PluginParameters.push({
+	type: "menu",
+	name: "Note Ten",
+	defaultValue: 1,
+	valueStrings: ["none", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+});
+
+PluginParameters.push({
+	type: "menu",
+	name: "Note Eleven",
+	defaultValue: 1,
+	valueStrings: ["none", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+});
+
+function HandleMIDI(event)
+{
+	if(event instanceof NoteOn)
+	{
+		//Check if the note is in a used pitch class and then try to use the last 
+		//played note to do smooth voice leading but bound it between 30 and 127
+		//
+		generateVoice(event);
+		generateVoice(event);
+		generateVoice(event);
+	}		
+}
+
+
+function generateVoice(noteEvent)
+{
+	getUsedPitchClasses();
+	var lastPlayedNote;
+	var randomNum = Math.floor(Math.random() * (13 - 0 + 1));
+	var randomOctave = Math.floor(Math.random() * (9 - 2 + 1));
+
+	var newNote = new NoteOn;
+	var newNoteOff = new NoteOff;
+	newNote.velocity = 75;
+	
+	if(!lastPlayedNote)
+	{
+		lastPlayedNote = (127 * Math.random());
+	}
+	
+	if(randomNum == usedPitchClasses)
+			{
+				noteHolder = findClosest(lastPlayedNote, getPitchClass(randomNum));
+				lastPlayedNote = noteHolder;
+				if(lastPlayedNote <= 30)
+				{
+					lastPlayedNote += 12;
+				}
+				if(lastPlayedNote >= 129)
+				{
+					lastPlayedNote -=12;
+				}
+				newNote.pitch = lastPlayedNote;
+				Trace(lastPlayedNote);
+				newNote.send();
+				newNoteOff.sendAfterMilliseconds(100);
+				
+			}
+			else
+			{
+				newRandomNum = findClosest(randomNum, usedPitchClasses);
+				noteHolder = findClosest(lastPlayedNote, getPitchClass(newRandomNum));
+				lastPlayedNote = noteHolder;
+				if(lastPlayedNote <= 30)
+				{
+					lastPlayedNote += 12;
+				}
+				if(lastPlayedNote >= 129)
+				{
+					lastPlayedNote -=12;
+				}
+				newNote.pitch = lastPlayedNote;
+				Trace(lastPlayedNote);
+				newNote.send();
+				newNoteOff.sendAfterMilliseconds(100);	
+			}
+			newNoteOff.sendAfterMilliseconds(100);	 
+}
+
+function getUsedPitchClasses()
+{
+	usedPitchClasses.push(GetParameter("Note One"));
+	usedPitchClasses.push(GetParameter("Note Two"));
+	usedPitchClasses.push(GetParameter("Note Three"));
+	usedPitchClasses.push(GetParameter("Note Four"));
+	usedPitchClasses.push(GetParameter("Note Five"));
+	usedPitchClasses.push(GetParameter("Note Six"));
+	usedPitchClasses.push(GetParameter("Note Seven"));
+	usedPitchClasses.push(GetParameter("Note Eight"));
+	usedPitchClasses.push(GetParameter("Note Nine"));
+	usedPitchClasses.push(GetParameter("Note Ten"));
+	usedPitchClasses.push(GetParameter("Note Eleven"));
+	
+}
+
+function findClosest (num, arr)
+{
+	var curr = arr[0];
+	var diff = Math.abs(num - curr);
+	
+	for (var val = 0; val < arr.length; val++)
+	{
+		var newdiff = Math.abs(num - arr[val]);
+		if (newdiff < diff)
+		{
+			diff = newdiff;
+			curr = arr[val];
+			//Trace(curr);
+		}
+	}
+	return curr;
+}
+
+function getPitchClass(noteEvent)
+{
+	var notePitch = noteEvent;
+	
+	var pitchClass;
+	
+	switch(notePitch)
+	{
+		case 0:
+		break;
+		
+		case 1:
+			pitchClass = cNotes;
+			return cNotes;
+			break;
+
+		case 2:
+			pitchClass = cSharpNotes;
+			return cSharpNotes;
+			break;
+		
+		case 3:
+			pitchClass = dNotes;
+			return dNotes;
+			break;
+		
+		case 4:
+			pitchClass = dSharpNotes;
+			return dSharpNotes;
+			break;
+		
+		case 5:
+			pitchClass = eNotes;
+			return eNotes;
+			break;
+		
+		case 6:
+			pitchClass = fNotes;
+			return fNotes;
+			break;
+		
+		case 7:
+			pitchClass = fSharpNotes;
+			return fSharpNotes
+			break;
+		
+		case 8:
+			pitchClass = gNotes;
+			return gNotes;
+			break;
+		
+		case 9:
+			pitchClass = gSharpNotes;
+			return gSharpNotes;
+			break;
+		
+		case 10:
+			pitchClass = aNotes;
+			return aNotes;
+			break;
+			
+		case 11:
+			pitchClass = aSharpNotes;
+			return aSharpNotes;
+			break;
+		
+		case 12:
+			pitchClass = bNotes;
+			return bNotes;
+			break;
+	}
+	
+	//Trace(pitchClass);
+
+}

@@ -1,0 +1,9 @@
+
+
+function HandleMIDI(event)
+{
+	event.velocity = (Math.random() * 126);  
+  
+  event.trace();
+	event.send();
+}

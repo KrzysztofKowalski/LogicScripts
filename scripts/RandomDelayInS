@@ -1,0 +1,31 @@
+
+
+
+var PluginParameters = 
+[{
+	name: "Max Delay",
+	type: "Slider",
+	maxValue: 60,
+	minValue: 0,
+	default: 0,
+
+},
+
+]
+
+
+function HandleMIDI(event)
+{
+	var randMultiplier = (GetParameter("Max Delay") * 1000 * Math.random());
+	var randDelay = (randMultiplier * Math.random());
+	
+	var randStart = (randMultiplier * Math.random());
+	var randEnd = (randStart + (randMultiplier * Math.random()));
+	
+	var noteStartEvent = new NoteOn(event);
+	var noteEndEvent = new NoteOff(event);
+	
+	noteStartEvent.sendAfterMilliseconds(randStart);
+	noteEndEvent.sendAfterMilliseconds(randEnd);
+	
+}

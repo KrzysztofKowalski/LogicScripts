@@ -1,0 +1,38 @@
+
+function HandleMIDI(event) {
+
+    //event.send(); // send original event
+
+    // if it's a note 
+    if (event instanceof Note) { 
+    
+    			var randNum = Math.random();
+    			
+    			switch(randNum)
+    			{
+    				
+    				
+    				case (randNum > 0.25 && randNum <= 0.4):
+    					event.pitch -= 24;
+    					event.send();
+    					break;
+    					
+    					case (randNum > 0.4 && randNum <= 0.6):
+    					event.pitch -= 12;
+    					event.send();
+    					break;
+    					
+    					case (randNum > 0.6 && randNum <= 0.75):
+    					event.pitch += 12;
+    					event.send();
+    					break;
+    					
+    					case (randNum > 0.75 && randNum <= 1):
+    					event.pitch += 24;
+    					event.send();
+    					break;
+    				}
+    				
+    				//event.send();
+    }
+}

@@ -1,0 +1,34 @@
+// Delays the midi event like a human would
+// Change "maxMs" to the maximum number of milliseconds you would like it to delay
+
+NeedsTimingInfo = true;
+
+function getRandomInt(maxMs)
+{
+	return Math.floor((Math.random()* Math.floor(maxMs)));
+}
+
+function HandleMIDI(event)
+{
+	var randomMs = getRandomInt(maxDelayInMs);	
+  event.sendAfterMilliseconds(randomMs);
+	//event.trace();
+	//Trace(maxDelayInMs);	
+}
+
+function ParameterChanged(param, value) 
+{
+		if (param === 0) 
+		{
+				maxDelayInMs = value;
+		}
+}
+
+var PluginParameters = [{
+		name:"Max Delay(in milliseconds)", 
+		type:"linear", 
+		minValue:0, 
+		maxValue:1000, 
+		numberOfSteps:1000, 
+		defaultValue:60
+}];

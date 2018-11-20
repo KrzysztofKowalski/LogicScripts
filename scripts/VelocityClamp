@@ -1,0 +1,48 @@
+//VelocityClamp
+
+function HandleMIDI(event) {
+        
+    if(event.velocity <= minVel)
+    {
+    		event.velocity = minVel;
+    }
+    
+    if(event.velocity >= maxVel)
+    {
+    		event.velocity = maxVel;
+    	}
+    
+    event.send();
+}
+
+function ParameterChanged(param, value) 
+{
+		if (param === 0) 
+		{
+				minVel = value;
+		}
+		if (param === 1)
+		{
+			maxVel = value;
+		}
+}
+
+
+var PluginParameters = [
+	{
+		name:"Note Velocity Min", 
+		type:"lin", 
+		minValue:1, 
+    maxValue:127,
+    numberOfSteps:126,
+    defaultValue:0
+	},
+	{
+		name:"Note Velocity Max", 
+		type:"lin", 
+		minValue:1, 
+    maxValue:127,
+    numberOfSteps:126,
+    defaultValue:126
+	}
+];
